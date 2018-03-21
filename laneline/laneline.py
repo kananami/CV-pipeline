@@ -39,6 +39,24 @@ for image in calibration_images:
 # Returns camera calibration
 ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints, gray.shape[::-1], None, None)
 
+class Line:
+    def __init__(self):
+        # was the line detected in the last iteration?
+        self.detected = False
+        # recent polynomial coefficients
+        self.recent_fit = []
+        # polynomial coefficients averaged over the last n iterations
+        self.best_fit = None
+        # polynomial coefficients for the most recent fit
+        self.current_fit = [np.array([False])]
+        # difference in fit coefficients between last and new fits
+        self.diffs = np.array([0, 0, 0], dtype='float')
+        # x values for detected line pixels
+        self.allx = None
+        # y values for detected line pixels
+        self.ally = None
+        # counter to reset after 5 iterations if issues arise
+        self.counter = 0
 
 
 
